@@ -1,0 +1,62 @@
+#!/bin/sh
+##################################################################
+# If you have some problem about compilation, read this article
+# 
+# http://www.ciaoshen.com/java/2017/04/05/javac.html
+#
+##################################################################
+
+# Basic Dir
+BASE_DIR="/Users/Wei/github/leetcode/java"
+CLASS_PATH="${BASE_DIR}/bin"
+SOURCE_PATH="${BASE_DIR}/src"
+LIB_PATH="${BASE_DIR}/lib"
+TEST_PATH="${BASE_DIR}/test"
+PREFIX="com.ciaoshen"
+
+# JUnit Lib
+JUNIT="${LIB_PATH}/junit-4.12.jar"
+HAMCREST="${LIB_PATH}/hamcrest-core-1.3.jar"
+
+# Leetcode
+LEET_PACK="com/ciaoshen/leetcode"
+LEET_SRC="${SOURCE_PATH}/${LEET_PACK}"
+LEET_TEST="${TEST_PATH}/${LEET_PACK}"
+LEET_PREFIX="${PREFIX}.leetcode"
+
+# com.ciaoshen.leetcode.myUtils
+UTIL_PACK="${LEET_PACK}/myUtils"
+UTIL_SRC="${SOURCE_PATH}/${UTIL_PACK}"
+UTIL_TEST="${TEST_PATH}/${UTIL_PACK}"
+UTIL_PREFIX="${LEET_PREFIX}.myUtils"
+
+
+
+############################
+#   leetcode with JUnit
+############################
+#javac -d ${CLASS_PATH} -cp ${CLASS_PATH}:${JUNIT} ${LEETCODE_SRC}/${1}.java ${LEETCODE_TEST}/${1}Test.java
+#java -cp ${CLASS_PATH}:${JUNIT}:${HAMCREST} org.junit.runner.JUnitCore com.ciaoshen.leetcode.$1Test
+
+############################
+#   leetcode without JUnit
+############################
+# File Name （简单的编译，修改CLASS_NAME参数即可）
+CLASS_NAME="DifferentWaysToAddParentheses"
+FILE_NAME="$CLASS_NAME.java"
+
+javac -Xlint -d ${CLASS_PATH} -cp ${CLASS_PATH} -sourcepath ${SOURCE_PATH} ${LEET_SRC}/${FILE_NAME}
+java -cp ${CLASS_PATH} ${LEET_PREFIX}.${CLASS_NAME}
+
+
+############################
+#  myUtils package 
+############################
+# File Name （简单的编译，修改UTIL_CLASS_NAME参数即可）
+UTIL_CLASS_NAME="RandomListNode"
+UTIL_FILE_NAME="${UTIL_CLASS_NAME}.java"
+
+#javac -d ${CLASS_PATH} -cp ${CLASS_PATH} -sourcepath ${SOURCE_PATH} ${UTIL_SRC}/${UTIL_FILE_NAME}
+#java -cp ${CLASS_PATH} ${UTIL_PREFIX}.${UTIL_CLASS_NAME}
+
+
