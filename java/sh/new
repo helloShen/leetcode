@@ -1,0 +1,47 @@
+#!/bin/sh
+#############################################################
+# Parameters
+# 每次修改 CLASS_NAME 和 METHOD
+# CLASS_NAME: 希望生成类的名字。
+# METHOD: Leetcode给出的Solution类里的主要方法签名。
+#
+# 例如：
+# 对问题Two Sum我想写一个叫TwoSum的类
+# Leetcode给出的方法签名如下：
+# 	public class Solution {
+#   		public int[] twoSum(int[] nums, int target) {
+#
+#    		}
+#	}
+#
+# 我应该把  CLASS_NAME 和 METHOD 改为：
+# CLASS_NAME: "TwoSum"
+# METHOD: "public int[] twoSum(int[] nums, int target)"
+##############################################################
+
+# basic dir
+BASE_DIR="/Users/Wei/github/leetcode/java/template"
+CLASS_DIR="${BASE_DIR}/bin"
+SOURCE_DIR="${BASE_DIR}/src"
+PACKAGE="com.ciaoshen.leetcode.template"
+
+# template
+SOURCE_PATH="${SOURCE_DIR}/com/ciaoshen/leetcode/template"
+
+# file
+FILE_NAME="ProblemGenerator"
+FILE="${FILE_NAME}.java"
+
+# parameters
+################################################
+# 请修改下面  CLASS_NAME  和  METHOD  两个参数
+################################################
+CLASS_NAME="LongestKSubstring"
+METHOD="public int coinChange(int[] coins, int amount)"
+TEMPLATE_FILE="${BASE_DIR}/problem.txt"
+DESTINATION="/Users/Wei/github/leetcode/java/src/com/ciaoshen/leetcode/${CLASS_NAME}.java"
+
+# compile
+javac -d ${CLASS_DIR} -cp ${CLASS_DIR} -sourcepath ${SOURCE_DIR} "${SOURCE_PATH}/${FILE}"
+# run
+java -cp ${CLASS_DIR} "${PACKAGE}.${FILE_NAME}" ${TEMPLATE_FILE} ${DESTINATION} ${CLASS_NAME} "${METHOD}"

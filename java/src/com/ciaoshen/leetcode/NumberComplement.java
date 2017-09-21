@@ -1,5 +1,5 @@
 /**
- * Leetcode - Algorithm - ReverseWordsInAString
+ * Leetcode - Algorithm - NumberComplement
  */
 package com.ciaoshen.leetcode;
 import java.util.*;
@@ -10,61 +10,52 @@ import com.ciaoshen.leetcode.myUtils.*;
  *  You can expand more solutions.
  *  Before using your new solutions, don't forget to register them to the solution registry.
  */
-class ReverseWordsInAString implements Problem {
+class NumberComplement implements Problem {
     private Map<Integer,Solution> solutions = new HashMap<>(); // solutions registry
     // register solutions HERE...
-    private ReverseWordsInAString() {
+    private NumberComplement() {
         register(new Solution1());
         register(new Solution2());
         register(new Solution3());
     }
     private abstract class Solution {
         private int id = 0;
-        abstract public String reverseWords(String s); // 主方法接口
+        abstract public int findComplement(int num); // 主方法接口
         protected void sometest() { return; } // 预留的一些小测试的接口
     }
     private class Solution1 extends Solution {
         { super.id = 1; }
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                char[] ca = word.toCharArray();
-                int lo = 0, hi = ca.length-1;
-                while (lo < hi) { exch(ca,lo++,hi--); }
-                sb = sb.append(ca).append(SPACE);
+        // implement your solution's method HERE...
+        private final int INT_SIZE = 32;
+        public int findComplement(int num) {
+            int len = 0;
+            int copy = num;
+            while (copy != 0) {
+                copy >>>= 1; ++len;
             }
-            return sb.substring(0,sb.length()-1);
-        }
-        private void exch(char[] ca, int lo, int hi) {
-            char temp = ca[lo];
-            ca[lo] = ca[hi];
-            ca[hi] = temp;
+            int mask = (~0) >>> (INT_SIZE - len);
+            // System.out.println("Mask \t\t=\t " + Test.getbits(mask));
+            return (num ^ mask);
         }
     }
 
     private class Solution2 extends Solution {
         { super.id = 2; }
         // implement your solution's method HERE...
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                sb.append(new StringBuilder(word).reverse().append(SPACE));
-            }
-            return sb.substring(0,sb.length()-1);
+        public int findComplement(int num) {
+            int mask = (Integer.highestOneBit(num) << 1) - 1;
+            return num ^ mask;
         }
     }
 
     private class Solution3 extends Solution {
         { super.id = 3; }
         // implement your solution's method HERE...
-        public String reverseWords(String s) {
-            return s;
+        public int findComplement(int num) {
+            return 3;
         }
     }
+    // you can expand more solutions HERE if you want...
 
 
     /**
@@ -83,13 +74,23 @@ class ReverseWordsInAString implements Problem {
     }
 
     private static class Test {
-        private ReverseWordsInAString problem = new ReverseWordsInAString();
+        private NumberComplement problem = new NumberComplement();
         private Solution solution = null;
 
         // call method in solution
-        private void call(String s) {
-            System.out.println("Original Words: " + s);
-            System.out.println("Reversed Words: " + solution.reverseWords(s) + "\n");
+        private void call(int num) {
+            System.out.println("Number \t\t=\t " + getbits(num));
+            System.out.println("Complement \t=\t " + getbits(solution.findComplement(num)) + "\n");
+        }
+        // represent an integer with it's bits
+        private static String getbits(int num) {
+            char[] nc = new char[32];
+            Arrays.fill(nc,'0');
+            int mask = 1;
+            for (int i = 31; i >= 0 && num != 0; i--, num >>>= 1) {
+                if ((num & mask) != 0) { nc[i] = '1'; }
+            }
+            return new String(nc);
         }
 
         // public API of Test interface
@@ -99,12 +100,12 @@ class ReverseWordsInAString implements Problem {
             System.out.println("\nCall Solution" + solution.id);
 
             /** initialize your testcases HERE... */
-            String s0 = "";
-            String s1 = "Let's take leetcode contest.";
+            int num1 = 1;
+            int num2 = 5;
 
             /** involk call() method HERE */
-            call(s0);
-            call(s1);
+            call(num1);
+            call(num2);
         }
     }
     public static void main(String[] args) {

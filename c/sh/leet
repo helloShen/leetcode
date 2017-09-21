@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+# Basic Dir
+BASE_DIR="/Users/Wei/github/leetcode/c"
+BIN_PATH="${BASE_DIR}/bin"
+SRC_PATH="${BASE_DIR}/src"
+LIB_PATH="${BASE_DIR}/lib"
+TEST_PATH="${BASE_DIR}/test"
+
+# variable
+NAME="UglyNumber"
+SRC_FILE="${NAME}.c"
+COMPILED_FILE="${NAME}.o"
+
+NAME2="/util/TreeNode"
+SRC_FILE2="${NAME2}.c"
+COMPILED_FILE2="${NAME2}.o"
+
+# compile
+gcc -g -o "${BIN_PATH}/${COMPILED_FILE}"  "${SRC_PATH}/${SRC_FILE}"
+#gcc -g -o "${BIN_PATH}/${COMPILED_FILE}"  "${SRC_PATH}/${SRC_FILE}" "${SRC_PATH}/${SRC_FILE2}"
+
+
+#debug
+#lldb "${BIN_PATH}/${COMPILED_FILE}"
+
+# run
+"${BIN_PATH}/${COMPILED_FILE}" 

@@ -1,5 +1,5 @@
 /**
- * Leetcode - Algorithm - ReverseWordsInAString
+ * Leetcode - Algorithm - KeyboardRow
  */
 package com.ciaoshen.leetcode;
 import java.util.*;
@@ -10,61 +10,70 @@ import com.ciaoshen.leetcode.myUtils.*;
  *  You can expand more solutions.
  *  Before using your new solutions, don't forget to register them to the solution registry.
  */
-class ReverseWordsInAString implements Problem {
+class KeyboardRow implements Problem {
     private Map<Integer,Solution> solutions = new HashMap<>(); // solutions registry
     // register solutions HERE...
-    private ReverseWordsInAString() {
+    private KeyboardRow() {
         register(new Solution1());
         register(new Solution2());
         register(new Solution3());
     }
     private abstract class Solution {
         private int id = 0;
-        abstract public String reverseWords(String s); // 主方法接口
+        abstract public String[] findWords(String[] words); // 主方法接口
         protected void sometest() { return; } // 预留的一些小测试的接口
     }
     private class Solution1 extends Solution {
         { super.id = 1; }
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                char[] ca = word.toCharArray();
-                int lo = 0, hi = ca.length-1;
-                while (lo < hi) { exch(ca,lo++,hi--); }
-                sb = sb.append(ca).append(SPACE);
+        private final int[] LETTER = new int[]{2,3,3,2,1,2,2,2,1,2,2,2,3,3,1,1,1,1,2,1,1,3,1,3,1,3};
+        public String[] findWords(String[] words) {
+            int j = 0;
+            for (int i = 0; i < words.length; i++) {
+                if (isOneRow(words[i])) { exch(words,i,j++); }
             }
-            return sb.substring(0,sb.length()-1);
+            return Arrays.copyOfRange(words,0,j);
         }
-        private void exch(char[] ca, int lo, int hi) {
-            char temp = ca[lo];
-            ca[lo] = ca[hi];
-            ca[hi] = temp;
+        private boolean isOneRow(String s) {
+            int len = s.length();
+            if (len == 0) { return true; }
+            int line = LETTER[getOffset(s.charAt(0))];
+            for (int i = 1; i < len; i++) {
+                if (LETTER[getOffset(s.charAt(i))] != line) { return false; }
+            }
+            return true;
+        }
+        private void exch(String[] words, int x, int y) {
+            String temp = words[x];
+            words[x] = words[y];
+            words[y] = temp;
+        }
+        private int getOffset(char c) {
+            if (c >= 'a' && c <= 'z') {
+                return c - 'a';
+            } else if (c >= 'A' && c <= 'Z') {
+                return c - 'A';
+            } else {
+                return -1;
+            }
         }
     }
 
     private class Solution2 extends Solution {
         { super.id = 2; }
         // implement your solution's method HERE...
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                sb.append(new StringBuilder(word).reverse().append(SPACE));
-            }
-            return sb.substring(0,sb.length()-1);
+        public String[] findWords(String[] words) {
+            return null;
         }
     }
 
     private class Solution3 extends Solution {
         { super.id = 3; }
         // implement your solution's method HERE...
-        public String reverseWords(String s) {
-            return s;
+        public String[] findWords(String[] words) {
+            return null;
         }
     }
+    // you can expand more solutions HERE if you want...
 
 
     /**
@@ -83,13 +92,13 @@ class ReverseWordsInAString implements Problem {
     }
 
     private static class Test {
-        private ReverseWordsInAString problem = new ReverseWordsInAString();
+        private KeyboardRow problem = new KeyboardRow();
         private Solution solution = null;
 
         // call method in solution
-        private void call(String s) {
-            System.out.println("Original Words: " + s);
-            System.out.println("Reversed Words: " + solution.reverseWords(s) + "\n");
+        private void call(String[] words) {
+            System.out.println("Original Words: " + Arrays.toString(words));
+            System.out.println("After: " + Arrays.toString(solution.findWords(words)));
         }
 
         // public API of Test interface
@@ -99,18 +108,17 @@ class ReverseWordsInAString implements Problem {
             System.out.println("\nCall Solution" + solution.id);
 
             /** initialize your testcases HERE... */
-            String s0 = "";
-            String s1 = "Let's take leetcode contest.";
-
+            String[] words1 = new String[]{"Hello", "Alaska", "Dad", "Peace"};
+            String[] words2 = new String[]{"Hello", "Peace"};
             /** involk call() method HERE */
-            call(s0);
-            call(s1);
+            call(words1);
+            call(words2);
         }
     }
     public static void main(String[] args) {
         Test test = new Test();
-        // test.test(1);
-        test.test(2);
+        test.test(1);
+        // test.test(2);
         // test.test(3);
     }
 }

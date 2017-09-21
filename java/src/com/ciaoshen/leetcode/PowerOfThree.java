@@ -1,5 +1,5 @@
 /**
- * Leetcode - Algorithm - ReverseWordsInAString
+ * Leetcode - Algorithm - PowerOfThree
  */
 package com.ciaoshen.leetcode;
 import java.util.*;
@@ -10,61 +10,69 @@ import com.ciaoshen.leetcode.myUtils.*;
  *  You can expand more solutions.
  *  Before using your new solutions, don't forget to register them to the solution registry.
  */
-class ReverseWordsInAString implements Problem {
+class PowerOfThree implements Problem {
     private Map<Integer,Solution> solutions = new HashMap<>(); // solutions registry
     // register solutions HERE...
-    private ReverseWordsInAString() {
+    private PowerOfThree() {
         register(new Solution1());
         register(new Solution2());
         register(new Solution3());
     }
     private abstract class Solution {
         private int id = 0;
-        abstract public String reverseWords(String s); // 主方法接口
+        abstract public boolean isPowerOfThree(int n); // 主方法接口
         protected void sometest() { return; } // 预留的一些小测试的接口
     }
     private class Solution1 extends Solution {
         { super.id = 1; }
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                char[] ca = word.toCharArray();
-                int lo = 0, hi = ca.length-1;
-                while (lo < hi) { exch(ca,lo++,hi--); }
-                sb = sb.append(ca).append(SPACE);
-            }
-            return sb.substring(0,sb.length()-1);
-        }
-        private void exch(char[] ca, int lo, int hi) {
-            char temp = ca[lo];
-            ca[lo] = ca[hi];
-            ca[hi] = temp;
+        // implement your solution's method HERE...
+        public boolean isPowerOfThree(int n) {
+            if (n == 0) { return false; }
+            while (n % 3 == 0) { n /= 3; }
+            return n == 1;
         }
     }
 
     private class Solution2 extends Solution {
         { super.id = 2; }
         // implement your solution's method HERE...
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                sb.append(new StringBuilder(word).reverse().append(SPACE));
+        public boolean isPowerOfThree(int n) {
+            if (n == 1) {
+                return true;
+            } else if (n == 0 || n % 3 != 0) {
+                return false;
+            } else {
+                return isPowerOfThree(n / 3);
             }
-            return sb.substring(0,sb.length()-1);
         }
     }
 
     private class Solution3 extends Solution {
         { super.id = 3; }
         // implement your solution's method HERE...
-        public String reverseWords(String s) {
-            return s;
+        public boolean isPowerOfThree(int n) {
+            return n > 0 && 1162261467 % n==0;
+        }
+        protected void sometest() {
+            for (int i = 0, n = 1; i < 10; i++) {
+                System.out.println(n + "\t" + getbits(n));
+                n *= 3;
+            }
+        }
+        private String getbits(int n) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 32; i++) {
+                if (n == 0) {
+                    sb.insert(0,0);
+                } else {
+                    sb.insert(0,n & 1);
+                    n >>>= 1;
+                }
+            }
+            return sb.toString();
         }
     }
+    // you can expand more solutions HERE if you want...
 
 
     /**
@@ -83,13 +91,13 @@ class ReverseWordsInAString implements Problem {
     }
 
     private static class Test {
-        private ReverseWordsInAString problem = new ReverseWordsInAString();
+        private PowerOfThree problem = new PowerOfThree();
         private Solution solution = null;
 
         // call method in solution
-        private void call(String s) {
-            System.out.println("Original Words: " + s);
-            System.out.println("Reversed Words: " + solution.reverseWords(s) + "\n");
+        private void call(int n) {
+            String res = (solution.isPowerOfThree(n))? "YES" : "NO";
+            System.out.println(n + " is power of 3? " + res);
         }
 
         // public API of Test interface
@@ -98,19 +106,16 @@ class ReverseWordsInAString implements Problem {
             if (solution == null) { System.out.println("Sorry, [id:" + id + "] doesn't exist!"); return; }
             System.out.println("\nCall Solution" + solution.id);
 
-            /** initialize your testcases HERE... */
-            String s0 = "";
-            String s1 = "Let's take leetcode contest.";
-
-            /** involk call() method HERE */
-            call(s0);
-            call(s1);
+            for (int i = 0; i < 30; i++) {
+                call(i);
+            }
+            // solution.sometest();
         }
     }
     public static void main(String[] args) {
         Test test = new Test();
         // test.test(1);
-        test.test(2);
-        // test.test(3);
+        // test.test(2);
+        test.test(3);
     }
 }

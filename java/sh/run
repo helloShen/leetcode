@@ -42,7 +42,7 @@ UTIL_PREFIX="${LEET_PREFIX}.myUtils"
 #   leetcode without JUnit
 ############################
 # File Name （简单的编译，修改CLASS_NAME参数即可）
-CLASS_NAME="DifferentWaysToAddParentheses"
+CLASS_NAME="LongestKSubstring"
 FILE_NAME="$CLASS_NAME.java"
 
 javac -Xlint -d ${CLASS_PATH} -cp ${CLASS_PATH} -sourcepath ${SOURCE_PATH} ${LEET_SRC}/${FILE_NAME}
@@ -53,8 +53,8 @@ java -cp ${CLASS_PATH} ${LEET_PREFIX}.${CLASS_NAME}
 #  myUtils package 
 ############################
 # File Name （简单的编译，修改UTIL_CLASS_NAME参数即可）
-UTIL_CLASS_NAME="RandomListNode"
-UTIL_FILE_NAME="${UTIL_CLASS_NAME}.java"
+#UTIL_CLASS_NAME="RandomListNode"
+#UTIL_FILE_NAME="${UTIL_CLASS_NAME}.java"
 
 #javac -d ${CLASS_PATH} -cp ${CLASS_PATH} -sourcepath ${SOURCE_PATH} ${UTIL_SRC}/${UTIL_FILE_NAME}
 #java -cp ${CLASS_PATH} ${UTIL_PREFIX}.${UTIL_CLASS_NAME}

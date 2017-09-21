@@ -1,5 +1,5 @@
 /**
- * Leetcode - Algorithm - ReverseWordsInAString
+ * Leetcode - Algorithm - MergeTwoBinaryTrees
  */
 package com.ciaoshen.leetcode;
 import java.util.*;
@@ -10,61 +10,58 @@ import com.ciaoshen.leetcode.myUtils.*;
  *  You can expand more solutions.
  *  Before using your new solutions, don't forget to register them to the solution registry.
  */
-class ReverseWordsInAString implements Problem {
+class MergeTwoBinaryTrees implements Problem {
     private Map<Integer,Solution> solutions = new HashMap<>(); // solutions registry
     // register solutions HERE...
-    private ReverseWordsInAString() {
+    private MergeTwoBinaryTrees() {
         register(new Solution1());
         register(new Solution2());
         register(new Solution3());
     }
     private abstract class Solution {
         private int id = 0;
-        abstract public String reverseWords(String s); // 主方法接口
+        abstract public TreeNode mergeTrees(TreeNode t1, TreeNode t2); // 主方法接口
         protected void sometest() { return; } // 预留的一些小测试的接口
     }
     private class Solution1 extends Solution {
         { super.id = 1; }
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                char[] ca = word.toCharArray();
-                int lo = 0, hi = ca.length-1;
-                while (lo < hi) { exch(ca,lo++,hi--); }
-                sb = sb.append(ca).append(SPACE);
+        // implement your solution's method HERE...
+        public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+            if (t1 == null && t2 == null) { return null; }
+            TreeNode t1Left = null, t1Right = null;
+            TreeNode t2Left = null, t2Right = null;
+            int sum = 0;
+            if (t1 != null) {
+                sum += t1.val;
+                t1Left = t1.left; t1Right = t1.right;
             }
-            return sb.substring(0,sb.length()-1);
-        }
-        private void exch(char[] ca, int lo, int hi) {
-            char temp = ca[lo];
-            ca[lo] = ca[hi];
-            ca[hi] = temp;
+            if (t2 != null) {
+                sum += t2.val;
+                t2Left = t2.left; t2Right = t2.right;
+            }
+            TreeNode newNode = new TreeNode(sum);
+            newNode.left = mergeTrees(t1Left,t2Left);
+            newNode.right = mergeTrees(t1Right,t2Right);
+            return newNode;
         }
     }
 
     private class Solution2 extends Solution {
         { super.id = 2; }
         // implement your solution's method HERE...
-        private final String SPACE = " ";
-        public String reverseWords(String s) {
-            String[] words = s.split(SPACE);
-            StringBuilder sb = new StringBuilder();
-            for (String word : words) {
-                sb.append(new StringBuilder(word).reverse().append(SPACE));
-            }
-            return sb.substring(0,sb.length()-1);
+        public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+            return null;
         }
     }
 
     private class Solution3 extends Solution {
         { super.id = 3; }
         // implement your solution's method HERE...
-        public String reverseWords(String s) {
-            return s;
+        public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+            return null;
         }
     }
+    // you can expand more solutions HERE if you want...
 
 
     /**
@@ -83,13 +80,14 @@ class ReverseWordsInAString implements Problem {
     }
 
     private static class Test {
-        private ReverseWordsInAString problem = new ReverseWordsInAString();
+        private MergeTwoBinaryTrees problem = new MergeTwoBinaryTrees();
         private Solution solution = null;
 
         // call method in solution
-        private void call(String s) {
-            System.out.println("Original Words: " + s);
-            System.out.println("Reversed Words: " + solution.reverseWords(s) + "\n");
+        private void call(TreeNode t1, TreeNode t2) {
+            System.out.println("Tree 1: " + t1.bfs() + "\n\n");
+            System.out.println("Tree 2: " + t2.bfs() + "\n\n");
+            System.out.println("Merged Tree: " + solution.mergeTrees(t1,t2).bfs() + "\n\n");
         }
 
         // public API of Test interface
@@ -98,19 +96,23 @@ class ReverseWordsInAString implements Problem {
             if (solution == null) { System.out.println("Sorry, [id:" + id + "] doesn't exist!"); return; }
             System.out.println("\nCall Solution" + solution.id);
 
-            /** initialize your testcases HERE... */
-            String s0 = "";
-            String s1 = "Let's take leetcode contest.";
+            TreeNode t11 = TreeNode.randomBST(20);
+            TreeNode t12 = TreeNode.randomBST(20);
+            TreeNode t21 = TreeNode.randomBST(20);
+            TreeNode t22 = TreeNode.randomBST(20);
+            TreeNode t31 = TreeNode.randomBST(20);
+            TreeNode t32 = TreeNode.randomBST(20);
 
             /** involk call() method HERE */
-            call(s0);
-            call(s1);
+            call(t11,t12);
+            call(t21,t22);
+            call(t31,t32);
         }
     }
     public static void main(String[] args) {
         Test test = new Test();
-        // test.test(1);
-        test.test(2);
+        test.test(1);
+        // test.test(2);
         // test.test(3);
     }
 }
