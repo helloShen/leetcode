@@ -36,8 +36,8 @@ FILE="${FILE_NAME}.java"
 ################################################
 # 请修改下面  CLASS_NAME  和  METHOD  两个参数
 ################################################
-CLASS_NAME="LongestIncreasingSubsequence"
-METHOD="public int lengthOfLIS(int[] nums)"
+CLASS_NAME="TrimABinarySearchTree"
+METHOD="public TreeNode trimBST(TreeNode root, int L, int R)"
 TEMPLATE_FILE="${BASE_DIR}/problem.txt"
 DESTINATION="/Users/Wei/github/leetcode/java/src/com/ciaoshen/leetcode/${CLASS_NAME}.java"
 
