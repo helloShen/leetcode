@@ -33,4 +33,20 @@ public class NestedInteger {
             return true;
         }
     }
+    public String toString() {
+        if (isInteger()) {
+            return "[" + num + "]";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            for (NestedInteger ni : nums) {
+                sb.append(ni.toString());
+                sb.append(",");
+            }
+            int len = sb.length();
+            sb.delete(len-1,len);
+            sb.append("]");
+            return sb.toString();
+        }
+    }
 }
