@@ -7,6 +7,9 @@ import java.util.*;
 public class NestedInteger {
     private Integer num = null;
     private List<NestedInteger> nums = null;
+    public NestedInteger() {
+        nums = new ArrayList<NestedInteger>();
+    }
     public NestedInteger(int num) {
         this.num = num;
     }

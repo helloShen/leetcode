@@ -36,12 +36,12 @@ FILE="${FILE_NAME}.java"
 ################################################
 # 请修改下面  CLASS_NAME  和  METHOD  两个参数
 ################################################
-CLASS_NAME="RelativeRanks"
-METHOD="public String[] findRelativeRanks(int[] nums)"
+CLASS_NAME="DesignHitCounter"
+METHOD="public int getHits(int timestamp)"
 TEMPLATE_FILE="${BASE_DIR}/problem.txt"
 DESTINATION="/Users/Wei/github/leetcode/java/src/com/ciaoshen/leetcode/${CLASS_NAME}.java"
 
 # compile
 javac -d ${CLASS_DIR} -cp ${CLASS_DIR} -sourcepath ${SOURCE_DIR} "${SOURCE_PATH}/${FILE}"
 # run
-java -cp ${CLASS_DIR} "${PACKAGE}.${FILE_NAME}" ${TEMPLATE_FILE} ${DESTINATION} ${CLASS_NAME} "${METHOD}"
+java -cp ${CLASS_DIR} "${PACKAGE}.${FILEuNAME}" ${TEMPLATE_FILE} ${DESTINATION} ${CLASS_NAME} "${METHOD}"
