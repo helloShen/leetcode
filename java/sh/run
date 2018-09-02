@@ -62,20 +62,20 @@ UTIL_FILE_NAME="${UTIL_CLASS_NAME}.java"
 ##################################
 # One package for each problem 
 ##################################
-PCK="nested_list_weight_sum_two"
+PCK="wiggle_subsequence"
 PREFIX="com.ciaoshen.leetcode.${PCK}"
 SOLUTION_NAME1="Solution1"
 SOLUTION_NAME2="Solution2"
-SOLUTION_NAME3="Solution2"
+SOLUTION_NAME3="Solution3"
 SOLUTION_FILE1="${LEET_SRC}/${PCK}/${SOLUTION_NAME1}.java"
-SOLUTION_FILE2="${LEET_SRC}/${PCK}/${SOLUTION_NAME2}.java"
-SOLUTION_FILE3="${LEET_SRC}/${PCK}/${SOLUTION_NAME2}.java"
+SOLUTION_FILE2="${SOLUTION_FILE1} ${LEET_SRC}/${PCK}/${SOLUTION_NAME2}.java"
+SOLUTION_FILE3="${SOLUTION_FILE2} ${LEET_SRC}/${PCK}/${SOLUTION_NAME3}.java"
 INTERFACE_NAME="Solution"
 INTERFACE_FILE="${LEET_SRC}/${PCK}/${INTERFACE_NAME}.java"
 TEST_NAME="Test"
 TEST_FILE="${LEET_SRC}/${PCK}/${TEST_NAME}.java"
 
-javac -d ${CLASS_PATH} -cp ${CLASS_PATH} -sourcepath ${SOURCE_PATH} "${SOLUTION_FILE1}" "${SOLUTION_FILE2}" "${SOLUTION_FILE3}" "${INTERFACE_FILE}" "${TEST_FILE}"
+javac -d ${CLASS_PATH} -cp ${CLASS_PATH} -sourcepath ${SOURCE_PATH} "${SOLUTION_FILE1}" "${INTERFACE_FILE}" "${TEST_FILE}"
 java -cp ${CLASS_PATH} ${PREFIX}.${TEST_NAME}
 
 

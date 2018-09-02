@@ -2,7 +2,7 @@
  * Leetcode - #366 - Find Leaves of Binary Tree
  * 
  */
-package com.ciaoshen.find_leaves_of_binary_tree;
+package com.ciaoshen.leetcode.find_leaves_of_binary_tree;
 import java.util.*;
 import com.ciaoshen.leetcode.myUtils.*;
 
