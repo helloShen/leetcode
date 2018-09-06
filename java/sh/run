@@ -62,11 +62,7 @@ UTIL_FILE_NAME="${UTIL_CLASS_NAME}.java"
 ##################################
 # One package for each problem 
 ##################################
-<<<<<<< HEAD
-PCK="mini_parser"
-=======
-PCK="combination_sum_four"
->>>>>>> 67e7a177fe342f7e05d91a676cf3633532d250ee
+PCK="is_subsequence"
 PREFIX="com.ciaoshen.leetcode.${PCK}"
 SOLUTION_NAME1="Solution1"
 SOLUTION_NAME2="Solution2"
