@@ -1,8 +1,6 @@
-<!-- ant build file for com.ciaoshen.leetcode.helper
-@author Pixel SHEN -->
 <?xml version="1.0"?>
-<project name="Ant Demo" basedir="." default="traditional">
-    <!-- project meta info -->
+<project name="com.ciaoshen.leetcode.helper" basedir="." default="test">
+    <!-- ant meta info -->
     <property name="ant.file" value="./build.xml"/>
     <property name="ant.home" value="/usr/local/apache-ant-1.10.5"/>
     <property name="ant.version" value="1.10.5"/>
@@ -12,56 +10,52 @@
     <property name="bin.dir" value="bin"/>
     <property name="lib.dir" value="lib"/>
     <!-- entry points -->
-    <property name="traditional.entry" value="com.ciaoshen.ant.demo.Calculator"/>
-    <property name="junit.entry" value="com.ciaoshen.ant.demo.TestRunner"/>
+    <property name="junit.entry" value="com.ciaoshen.leetcode.helper.TestRunner"/>
 
     <!-- build classpath collection with a path-like structure -->
     <path id="build.classpath">
         <pathelement path="${bin.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="gson-2.8.5.jar"/>
+            <include name="velocity-engine-core-2.0.jar"/>
+        </fileset>
     </path>
-    <path id="junit.classpath">
-        <pathelement path="${bin.dir}"/>
+    <path id="test.classpath">
+        <path refid="build.classpath"/>
         <fileset dir="${lib.dir}">
             <include name="junit-4.10.jar"/>
         </fileset>
     </path>
 
     <!-- targets -->
-    <target name="traditional"
-        depends="info,compile,traditional.exec">
-        <echo>Finish!</echo>
+    <target name="build"
+        depends="compile.src">
     </target>
-    <target name="junit"
-        depends="info,compile,junit.exec">
-    </target>
-    <target name="info">
-        <echo>This is ${project-name}!</echo>
-    </target>
-    <target name="compile" description="Compile java source codes.">
-        <echo>Compile .java source file under ${main.dir}!</echo>
-        <mkdir dir="${bin.dir}"/>
-        <javac destdir="${bin.dir}" srcdir="${main.dir}" source="1.6" debug="on" includeantruntime="false">
-            <include name="**/*.java"/>
-            <classpath refid="build.classpath"/>
-        </javac>
-        <javac destdir="${bin.dir}" srcdir="${test.dir}" source="1.6" debug="on" includeantruntime="false">
-            <include name="**/*.java"/>
-            <classpath refid="junit.classpath"/>
-        </javac>
-    </target>
-    <target name="traditional.exec" description="Launch traditional test.">
-        <echo>Run ${traditional.entry}!</echo>
-        <java classname="${traditional.entry}">
-            <classpath refid="build.classpath"/>
-        </java>
-    </target>
-    <target name="junit.exec" description="Launch Junit test.">
-        <echo>Run ${junit.entry}!</echo>
+    <target name="test"
+        depends="compile.src,compile.test">
+        <echo>Running JUnit Test ... </echo>
         <java classname="${junit.entry}">
-            <classpath refid="junit.classpath"/>
+            <classpath refid="test.classpath"/>
         </java>
+    </target>
+    <target name="compile.src" description="Compile helper source codes.">
+        <echo>Compile .java source file under ${main.dir} ... </echo>
+        <mkdir dir="${bin.dir}"/>
+        <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
+            <include name="**/*.java"/>
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+    <target name="compile.test" description="Compile junit test source codes.">
+        <echo>Compile .java source file under ${test.dir} ... </echo>
+        <mkdir dir="${bin.dir}"/>
+        <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
+            <include name="**/*.java"/>
+            <classpath refid="test.classpath"/>
+        </javac>
     </target>
     <target name="clean" description="Clean output directories.">
+        <echo>Cleaning all .class file ... </echo>
         <delete>
             <fileset dir="${bin.dir}">
                 <include name="**/*.class"/>

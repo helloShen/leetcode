@@ -4,38 +4,31 @@
  * @author Pixel SHEN
  */
 package com.ciaoshen.leetcode.helper;
-
 /** JUnit */
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+/** java.io */
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-class ProblemBuilderTest {
+public class ProblemBuilderTest {
 
-    @Before
-    public void init() {
+    public ProblemBuilderTest() {
         builder = new ProblemBuilder();
     }
     @Test
-    public void testGetWriter() {
-        BufferedWriter w = builder.getWriter(R_TEST);
-        assertNotNull(w);
-    }
-    @Test
-    public void testGetReader() {
-        BufferedReader r = builder.getReader(R_TEST);
-        assertNotNull(r);
-    }
-    @Test
     public void testReadFile() {
-        BufferedReader r = builder.getReader(R_TEST);
-        String content = builder.readFile(R_TEST);
+        String content = builder.readFile(F_TEST);
         assertEquals(content, "Hello Ronald!");
+        System.out.println("ProblemBuilder#readFile() method pass JUnit test!");
     }
 
     /**==================== 【 private 】 =========================*/
-    private final String ROOT = "/Users/Wei/github/leetcode/helper"
+    private final String ROOT = "/Users/Wei/github/leetcode/helper";
     private final String RES_DIR = ROOT + "/src/test/resources";
-    private final String R_TEST = RES_DIR + "/reader_test.txt";
+    private final String F_TEST = RES_DIR + "/reader_test.txt";
     private ProblemBuilder builder;
 }

@@ -9,23 +9,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class ProblemBuilder {
 
-    /** 拿到Writer */
-    private BufferedWriter getWriter(String tgtPath) {
-        return new BufferedWriter(new FileWriter(new File(tgtPath)));
-    }
-    /** 拿到Reader */
-    private BufferedReader getReader(String srcPath) {
-        return new BufferedReader(new FileReader(new File(srcPath)));
-    }
     /** 读取整个文件 */
-    public static String readFile(String path) {
+    String readFile(String path) {
         StringBuilder sb = new StringBuilder();
         try {
-            BufferedReader r = getReader(path);
+            BufferedReader r = new BufferedReader(new FileReader(new File(path)));
             String line = "";
             try {
                 while ((line = r.readLine()) != null) {
@@ -34,11 +28,9 @@ public class ProblemBuilder {
             } finally {
                 r.close();
             }
-        } catch (NullPointerException npe) { // new File() get null input path
-            throw new RuntimeException("File path is null.");
-        } catch (FileNotFoundException fnfe) { // new FileReader() file not exist
+        } catch (FileNotFoundException fnfe) { // new FileReader()
             throw new RuntimeException("File not found: <" + path + ">.");
-        } catch (IOException ioe) { // r.readLine()
+        } catch (IOException ioe) { // r.readLine(), r.close()
             throw new RuntimeException("IOException while reading file: <" + path + ">.");
         }
         return sb.toString();
