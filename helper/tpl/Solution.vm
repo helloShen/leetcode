@@ -1,0 +1,10 @@
+/**
+ * Leetcode - ${package}
+ */
+package com.ciaoshen.leetcode.${package};
+import java.util.*;
+import com.ciaoshen.leetcode.myUtils.*;
+
+interface Solution {
+
+}

@@ -24,6 +24,9 @@
         <path refid="build.classpath"/>
         <fileset dir="${lib.dir}">
             <include name="junit-4.10.jar"/>
+            <include name="slf4j-api-1.7.25.jar"/>
+            <include name="slf4j-simple-1.7.25.jar"/>
+            <include name="commons-lang3-3.8.jar"/>
         </fileset>
     </path>
 
