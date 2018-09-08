@@ -1,5 +1,5 @@
 /**
- * Leetcode默认项目生成器
+ * Generate a project skeleton for a Leetcode Problem
  *
  * @author Pixel SHEN
  */
@@ -7,6 +7,7 @@ package com.ciaoshen.leetcode.helper;
 // java.io
 import java.io.File;
 import java.io.Writer;
+import java.io.StringWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
@@ -21,6 +22,23 @@ import org.apache.velocity.VelocityContext;
 
 public class ProblemBuilder {
 
+    /**
+     * @param args Must have 4 arguments:
+     *      1. templateDir
+     *      2. srcDir
+     *      3. package
+     *      4. problemName
+     *
+     * Firstly, the "package" argument is just a package name such as：
+     *      > package = "com.ciaoshen.leetcode.helper"
+     * transform to,
+     *      > packagePath = "com/ciaoshen/leetcode/helper"
+     *
+     * Then construct the absolute path of source code directory of that problem,
+     *      > problemDir = [srcDir/packagePath/problemName]
+     *
+     * Velocity templates are located in templateDir
+     */
     public ProblemBuilder(String[] args) {
         if (args.length != 4) {
             throw new IllegalArgumentException("Must have 4 arguments!");
@@ -31,29 +49,72 @@ public class ProblemBuilder {
         problemName = args[3];
         problemDir = srcDir + "/" + packagePath + "/" + problemName;
         ve = new VelocityEngine();
+        // tell velocity where to find .vm template files
+        ve.setProperty("file.resource.loader.path", templateDir);
         ve.init();
     }
+
     /**
-     * 针对一个
-     * @param path [description]
-    void writeTemplate(String fileName) {
-        Template t = ve.getTemplate(templatePath);
+     * Call writeTemplate() for each template in templateDir
+     */
+    void writeTemplates() {
+        File[] templates = new File(templateDir).listFiles();
+        for (File t : templates) {
+            System.out.println(t.getName());
+            writeTemplate(t);
+        }
+    }
+
+    private final String JAVA_EXP = "java";
+    /**
+     * Convert "Solution.vm" to "/Users/Wei/.../Solution.java"
+     * @param f velocity template file
+     @ @return absolute path of the corresponding java source file
+     */
+    String buildSourcePath(File f) {
+        String fullFileName = f.getName(); // such as: "Solution.vm"
+        String fileName = fullFileName.substring(0, fullFileName.indexOf(".")); // such as: "Solution"
+        return problemDir + "/" + fileName + "." + JAVA_EXP; // such as: "/Users/Wei/.../Solution.java"
+    }
+
+
+    // void writeTemplate(File tplFile) {
+    //     System.out.println("I'm writing " + buildSourcePath(tplFile));
+    // }
+    /**
+     * Call Velociy to fill a .vm template
+     * @param tplPath absolute path of a velocity .vm template
+     * @param dst absolute path where store the generated .java source file
+     */
+    void writeTemplate(File tplFile) {
+        Template t = ve.getTemplate(tplFile.getName());
         VelocityContext context = new VelocityContext();
         context.put("package", problemName);
-        Writer w = getWriter(targetPath);
-        t.merge(context, w);
-        w.write(w.toString());
+        Writer sw = new StringWriter();
+        t.merge(context, sw);
+        Writer fw = getFileWriter(buildSourcePath(tplFile));
         try {
-            w.close();
+            fw.write(sw.toString());
+            fw.close();
+            sw.close();
         } catch (IOException ioe) {
             throw new RuntimeException("ProblemBuilder#writeTemplate() can not close the Writer!");
         }
     }
-     */
 
-    /** 获取一个用BufferedWriter装饰的FileWriter */
-    Writer getWriter(String path) {
+    /**
+     * Get a FileWriter decorated by BufferedWriter
+     * @param  path absolute path of that file
+     * @return      A FileWriter decorated by BufferedWriter
+     */
+    Writer getFileWriter(String path) {
         try {
+            String directoryPath = path.substring(0, path.lastIndexOf("/"));
+            System.out.println("Directory Path = " + directoryPath);
+            File directory = new File(directoryPath);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
             return new BufferedWriter(new FileWriter(new File(path)));
         } catch (FileNotFoundException fnfe) { // new File()
             throw new RuntimeException("File not found: <" + path + ">.");
@@ -62,7 +123,11 @@ public class ProblemBuilder {
         }
     }
 
-    /** 读取指定文本文件 */
+    /**
+     * Read the content of a file
+     * @param  path absolute path of that file
+     * @return      Content of that file in an entire String
+     */
     String readFile(String path) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -83,16 +148,24 @@ public class ProblemBuilder {
         return sb.toString();
     }
 
+    /**
+     * Junit test need constructed absolute path
+     * @return the constructed absolution path to the directory of all generated .java files
+     */
     String getProblemDir() {
         return problemDir;
     }
 
     private VelocityEngine ve;
-    private String templateDir;             // 模板所在根目录
-    private String srcDir;                  // 项目源代码根目录
-    private String packagePath;             // 像com.ciaoshen.leetcode.helper这样的包名
-    private String problemName;             // 问题名字
-    // 以[src_dir/package_path/problem_name]格式构成的项目源码目录
+
+    private String templateDir;             // template directory
+    private String srcDir;                  // source code directory for all leetcode problems
+    private String packagePath;             // package name such as: com.ciaoshen.leetcode.helper
+    private String problemName;             // name of this problem
+    /*
+     * Absolute path of source code for that problem
+     *      [src_dir/package_path/problem_name]
+     */
     private String problemDir;
 
     /**
@@ -101,15 +174,6 @@ public class ProblemBuilder {
      *      2. srcDir
      *      3. package
      *      4. problemName
-     *
-     * 首先，参数传进来的"package"只是个包名："com.ciaoshen.leetcode.helper"，
-     * 需要转换成 "com/ciaoshen/leetcode/helper"样式的路径：packagePath
-     *
-     * 这些参数被用来构造我们生成的文件的目标路径：
-     *
-     *      problemDir = [srcDir/packagePath/problemName]
-     *
-     * 最后在templateDir里有几个模板文件，就在problemDir里填充这几个模板.
      */
     public static void main(String[] args) {
         if (args.length != 4) {
