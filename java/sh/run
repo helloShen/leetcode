@@ -62,7 +62,7 @@ UTIL_FILE_NAME="${UTIL_CLASS_NAME}.java"
 ##################################
 # One package for each problem 
 ##################################
-PCK="is_subsequence"
+PCK="utf8_validation"
 PREFIX="com.ciaoshen.leetcode.${PCK}"
 SOLUTION_NAME1="Solution1"
 SOLUTION_NAME2="Solution2"
