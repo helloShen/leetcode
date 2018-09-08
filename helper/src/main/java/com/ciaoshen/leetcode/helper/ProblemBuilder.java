@@ -57,13 +57,16 @@ public class ProblemBuilder {
     /**
      * Call writeTemplate() for each template in templateDir
      */
-    void writeTemplates() {
+    public void writeTemplates() {
         File[] templates = new File(templateDir).listFiles();
         for (File t : templates) {
             System.out.println(t.getName());
             writeTemplate(t);
         }
     }
+
+
+    /**================= 【not public】 ====================*/
 
     private final String JAVA_EXP = "java";
     /**
@@ -170,14 +173,27 @@ public class ProblemBuilder {
 
     /**
      * Must have 4 arguments:
-     *      1. templateDir
-     *      2. srcDir
-     *      3. package
-     *      4. problemName
+     *      1. templateDir      --> where is the velocity templates
+     *      2. srcDir       |
+     *      3. package      |-----> problem directory = [src_dir/package_path/problem_name]
+     *      4. problemName  |
      */
     public static void main(String[] args) {
         if (args.length != 4) {
             throw new IllegalArgumentException("Must have 4 argument!");
         }
+        ProblemBuilder builder = new ProblemBuilder(args);
+        builder.writeTemplates();
+
+        // /** 根目录 */
+        // String root = "/Users/Wei/github/leetcode/helper";
+        // /** 构造ProblemBuilder的4个必要参数 */
+        // String tplDir = root + "/src/main/resources";
+        // String srcDir = root + "/src/main/java";
+        // String pck = "com.ciaoshen.leetcode.helper";
+        // String prob = "two_sum";
+        // String[] myArgs = new String[]{tplDir, srcDir, pck, prob};
+        // ProblemBuilder builder = new ProblemBuilder(myArgs);
+        // builder.writeTemplates();
     }
 }

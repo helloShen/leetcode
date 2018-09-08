@@ -1,30 +1,31 @@
 <?xml version="1.0"?>
 <project name="com.ciaoshen.leetcode.helper" basedir="." default="test">
+
+    <!-- ================================= properties ================================== -->
+
     <!-- ant meta info -->
     <property name="ant.file" value="./build.xml"/>
     <property name="ant.home" value="/usr/local/apache-ant-1.10.5"/>
     <property name="ant.version" value="1.10.5"/>
     <!-- main path -->
     <property name="main.dir" value="src/main/java"/>
-    <property name="test.dir" value="src/test"/>
     <property name="tpl.dir" value="src/main/resources"/>
+    <property name="test.dir" value="src/test"/>
     <property name="bin.dir" value="bin"/>
     <property name="lib.dir" value="lib"/>
     <!-- entry points -->
-    <property name="junit.entry" value="com.ciaoshen.leetcode.helper.TestRunner"/>
+    <property name="pck" value="com.ciaoshen.leetcode.helper"/>
+    <property name="junit.entry" value="${pck}.TestRunner"/>
+    <property name="main.entry" value="${pck}.ProblemBuilder"/>
+
+
+    <!-- ================================= classpath ================================== -->
 
     <!-- build classpath collection with a path-like structure -->
-    <path id="build.classpath">
+    <path id="classpath">
         <pathelement path="${bin.dir}"/>
-        <!-- <pathelement path="${tpl.dir}"/> -->
         <fileset dir="${lib.dir}">
-            <include name="gson-2.8.5.jar"/>
             <include name="velocity-engine-core-2.0.jar"/>
-        </fileset>
-    </path>
-    <path id="test.classpath">
-        <path refid="build.classpath"/>
-        <fileset dir="${lib.dir}">
             <include name="junit-4.10.jar"/>
             <include name="slf4j-api-1.7.25.jar"/>
             <include name="slf4j-simple-1.7.25.jar"/>
@@ -32,35 +33,52 @@
         </fileset>
     </path>
 
-    <!-- targets -->
+    <!-- ================================= targets ================================== -->
+    <!-- only compile main source code -->
     <target name="build"
         depends="compile.src">
     </target>
     <target name="test"
-        depends="compile.src,compile.test">
-        <echo>Running JUnit Test ... </echo>
-        <java classname="${junit.entry}">
-            <classpath refid="test.classpath"/>
+        depends="compile.src">
+        <echo>Run ProblemBuilder from main() method!</echo>
+        <java classname="${main.entry}">
+            <arg value="${tpl.dir}"/>
+            <arg value="${main.dir}"/>
+            <arg value="${pck}"/>
+            <!-- configure problem name by commend line -->
+            <arg value="${problem}"/>
+            <classpath refid="classpath"/>
         </java>
     </target>
+    <!-- compile main source code, compile junit tests, run junit tests -->
+    <target name="junit"
+        depends="compile.src,compile.junit">
+        <echo>Running JUnit Test ... </echo>
+        <java classname="${junit.entry}">
+            <classpath refid="classpath"/>
+        </java>
+    </target>
+    <!-- compile main source code -->
     <target name="compile.src" description="Compile helper source codes.">
         <echo>Compile .java source file under ${main.dir} ... </echo>
         <mkdir dir="${bin.dir}"/>
         <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
             <include name="**/ProblemBuilder.java"/>
-            <classpath refid="build.classpath"/>
+            <classpath refid="classpath"/>
         </javac>
     </target>
-    <target name="compile.test" description="Compile junit test source codes.">
+    <!-- compile junit tests -->
+    <target name="compile.junit" description="Compile junit test source codes.">
         <echo>Compile .java source file under ${test.dir} ... </echo>
         <mkdir dir="${bin.dir}"/>
         <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
             <include name="**/*.java"/>
-            <classpath refid="test.classpath"/>
+            <classpath refid="classpath"/>
         </javac>
     </target>
+    <!-- remove main classes, remove generated .java skeleton -->
     <target name="clean" description="Clean output directories.">
-        <echo>Cleaning all .class file ... </echo>
+        <echo>Cleaning all .class file and generated .java skeleton ... </echo>
         <delete includeemptydirs="true">
             <fileset dir="${bin.dir}">
                 <include name="**/*.class"/>
