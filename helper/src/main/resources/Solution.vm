@@ -1,9 +1,9 @@
 /**
- * Leetcode - ${package}
+ * Leetcode - ${problem}
  */
-package com.ciaoshen.leetcode.${package};
+package ${pck}.${problem};
 import java.util.*;
-import com.ciaoshen.leetcode.myUtils.*;
+import ${util}.*;
 
 interface Solution {
 

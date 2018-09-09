@@ -24,30 +24,45 @@ public class ProblemBuilder {
 
     /**
      * @param args Must have 4 arguments:
-     *      1. templateDir
-     *      2. srcDir
-     *      3. package
-     *      4. problemName
+     * Must have 6 arguments:
+     *      1. templateDir              --> where is the velocity templates
+     *      2. srcDir / 3. testDir  |
+     *      4. package              |-----> problem source code / test source code directory
+     *      5. problemName          |
+     *      6. util                     --> leetcode common data structure
+     *
      *
      * Firstly, the "package" argument is just a package name such as：
      *      > package = "com.ciaoshen.leetcode.helper"
      * transform to,
      *      > packagePath = "com/ciaoshen/leetcode/helper"
      *
-     * Then construct the absolute path of source code directory of that problem,
-     *      > problemDir = [srcDir/packagePath/problemName]
+     * Then construct problem source code directory,
+     *      > problemDestination = [srcDir/packagePath/problemName]
+     * And also, test source code directory,
+     *      > testDir = [testDir/packagePath/problemName]
      *
      * Velocity templates are located in templateDir
+     *
+     * util is the leetcode commonly used data structure library, such as,
+     *      > com.ciaoshen.leetcode.myUtils
      */
     public ProblemBuilder(String[] args) {
-        if (args.length != 4) {
-            throw new IllegalArgumentException("Must have 4 arguments!");
+        if (args.length != 6) {
+            throw new IllegalArgumentException("Must have 6 arguments!");
         }
+        // 6 origial arguments
         templateDir = args[0];
         srcDir = args[1];
-        packagePath = args[2].replaceAll("\\.","/");
-        problemName = args[3];
-        problemDir = srcDir + "/" + packagePath + "/" + problemName;
+        testDir = args[2];
+        pck = args[3];
+        problemName = args[4];
+        util = args[5];
+        // construct 3 important dir
+        packagePath = pck.replaceAll("\\.","/");
+        problemDestination = srcDir + "/" + packagePath + "/" + problemName;
+        testDestination = testDir + "/" + packagePath + "/" + problemName;
+        // create Velocity engine
         ve = new VelocityEngine();
         // tell velocity where to find .vm template files
         ve.setProperty("file.resource.loader.path", templateDir);
@@ -71,13 +86,20 @@ public class ProblemBuilder {
     private final String JAVA_EXP = "java";
     /**
      * Convert "Solution.vm" to "/Users/Wei/.../Solution.java"
+     * 2 types of source code:
+     *      1. main source code: to main.dir
+     *      2. junit source code: to test.dir
      * @param f velocity template file
      @ @return absolute path of the corresponding java source file
      */
     String buildSourcePath(File f) {
         String fullFileName = f.getName(); // such as: "Solution.vm"
         String fileName = fullFileName.substring(0, fullFileName.indexOf(".")); // such as: "Solution"
-        return problemDir + "/" + fileName + "." + JAVA_EXP; // such as: "/Users/Wei/.../Solution.java"
+        if (fileName.length() >= 4 && fileName.substring(0,4).equals("Test")) {
+            return testDestination + "/" + fileName + "." + JAVA_EXP; // such as: "/Users/Wei/.../Solution.java"
+        } else {
+            return problemDestination + "/" + fileName + "." + JAVA_EXP; // such as: "/Users/Wei/.../Solution.java"
+        }
     }
 
 
@@ -92,7 +114,10 @@ public class ProblemBuilder {
     void writeTemplate(File tplFile) {
         Template t = ve.getTemplate(tplFile.getName());
         VelocityContext context = new VelocityContext();
-        context.put("package", problemName);
+        // assign variables
+        context.put("problem", problemName);
+        context.put("pck", pck);
+        context.put("util", util);
         Writer sw = new StringWriter();
         t.merge(context, sw);
         Writer fw = getFileWriter(buildSourcePath(tplFile));
@@ -120,9 +145,9 @@ public class ProblemBuilder {
             }
             return new BufferedWriter(new FileWriter(new File(path)));
         } catch (FileNotFoundException fnfe) { // new File()
-            throw new RuntimeException("File not found: <" + path + ">.");
+            throw new RuntimeException("ProblemBuilder#getFileWriter(): File not found: <" + path + ">.");
         } catch (IOException ioe) { // new FileWriter()
-            throw new RuntimeException("IOException occurred when creating the new FileWriter.");
+            throw new RuntimeException("ProblemBuilder#getFileWriter(): IOException occurred when creating the new FileWriter.");
         }
     }
 
@@ -144,9 +169,9 @@ public class ProblemBuilder {
                 r.close();
             }
         } catch (FileNotFoundException fnfe) { // new FileReader()
-            throw new RuntimeException("File not found: <" + path + ">.");
+            throw new RuntimeException("ProblemBuilder#readFile(): File not found: <" + path + ">.");
         } catch (IOException ioe) { // r.readLine(), r.close()
-            throw new RuntimeException("IOException while reading file: <" + path + ">.");
+            throw new RuntimeException("ProblemBuilder#readFile(): IOException while reading file: <" + path + ">.");
         }
         return sb.toString();
     }
@@ -155,31 +180,54 @@ public class ProblemBuilder {
      * Junit test need constructed absolute path
      * @return the constructed absolution path to the directory of all generated .java files
      */
-    String getProblemDir() {
-        return problemDir;
+    String getProblemDestination() {
+        return problemDestination;
+    }
+    /**
+     * Junit test need constructed absolute path
+     * @return the constructed absolution path to the directory of all generated .java files
+     */
+    String getTestDestination() {
+        return testDestination;
     }
 
     private VelocityEngine ve;
 
     private String templateDir;             // template directory
     private String srcDir;                  // source code directory for all leetcode problems
-    private String packagePath;             // package name such as: com.ciaoshen.leetcode.helper
+    private String testDir;                 // junit source code directory
+    private String pck;                     // package name such as: com.ciaoshen.leetcode.helper
     private String problemName;             // name of this problem
+    private String util;                    // common data structure such as: com.ciaoshen.leetcode.myUtils
+
     /*
-     * Absolute path of source code for that problem
-     *      [src_dir/package_path/problem_name]
+     * replace the "." by "/" in package name
+     *      package = com.ciaoshen.leetcode.helper
+     *      packagePath = com/ciaoshen/leetcode/helper
      */
-    private String problemDir;
+    private String packagePath;             // package path such as: com/ciaoshen/leetcode/helper
+    /*
+     * problem source code absolute path
+     *      [srcDir/packagePath/problemName]
+     */
+    private String problemDestination;
+    /*
+     * problem junit test source code absolute path
+     *      [testDir/packagePath/problemName]
+     */
+    private String testDestination;
 
     /**
-     * Must have 4 arguments:
-     *      1. templateDir      --> where is the velocity templates
-     *      2. srcDir       |
-     *      3. package      |-----> problem directory = [src_dir/package_path/problem_name]
-     *      4. problemName  |
+     * Must have 6 arguments:
+     *      1. templateDir              --> where is the velocity templates
+     *      2. srcDir / 3. testDir  |
+     *      4. package              |-----> problem directory = [src_dir/package_path/problem_name]
+     *      5. problemName          |
+     *      6. util                     --> leetcode common data structure
+     *
      */
     public static void main(String[] args) {
-        if (args.length != 4) {
+        if (args.length != 6) {
             throw new IllegalArgumentException("Must have 4 argument!");
         }
         ProblemBuilder builder = new ProblemBuilder(args);
