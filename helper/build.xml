@@ -25,133 +25,52 @@
         </fileset>
     </path>
 
-    <!-- ================================= targets to release ================================== -->
-    <!-- @CONFIRMED run ProblemBuilder main() method -->
-    <target name="release.generate" description="Generate project skeleton for a problem.">
-        <java classname="${main.entry}">
-            <arg value="${tpl.dir}"/>
-            <arg value="${main.dir}"/>
-            <arg value="${test.dir}"/>
-            <arg value="${pck}"/>
-            <arg value="${problem}"/>
-            <arg value="${util}"/>
-            <classpath refid="classpath"/>
-        </java>
-        <echo>Problem ${problem} generated! </echo>
-    </target>
 
-    <!-- @CONFIRMED compile main source code -->
-    <target name="release.compile" description="Compile problem source codes.">
+
+    <!-- ================================= targets to test helper ================================== -->
+
+    <!-- @CONFIRMED -->
+    <target name="compile.src" description="Compile helper source codes.">
+        <echo>Compiling .java source file under ${main.dir} ... </echo>
         <mkdir dir="${bin.dir}"/>
         <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
-            <include name="**/${problem}/*.java"/>
+            <include name="**/helper/*.java"/>
             <classpath refid="classpath"/>
         </javac>
+    </target>
+    <!-- @CONFIRMED -->
+    <target name="compile.junit" description="Compile helper junit test source codes.">
+        <echo>Compiling .java source file under ${test.dir} ... </echo>
+        <mkdir dir="${bin.dir}"/>
         <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
-            <include name="**/${problem}/*.java"/>
+            <include name="**/helper/*.java"/>
             <classpath refid="classpath"/>
         </javac>
-        <echo>Problem ${problem} source code compiled! </echo>
     </target>
-
-    <!-- @CONFIRMED test a specific generated problem -->
-    <target name="release.test" description="Run problem junit test.">
-        <echo>Testing problem ${problem} ... </echo>
-        <java classname="${pck}.${problem}.TesterRunner">
-            <classpath refid="classpath"/>
-        </java>
-    </target>
-
-    <!-- @CONFIRMED remove a specific problem -->
-    <target name="release.clean" description="Clean output directories.">
-        <input message="Delete all source code of problem ${problem} (y/n)?"
-               validargs="y,n"
-               addproperty="do.delete"/>
-        <condition property="do.abort">
-          <equals arg1="n" arg2="${do.delete}"/>
-        </condition>
-        <fail if="do.abort">Delete operation aborted by user.</fail>
-        <delete includeemptydirs="true">
-            <fileset dir="${bin.dir}">
-                <include name="**/${problem}"/>
-                <exclude name="**/helper/*"/>
-            </fileset>
-            <fileset dir="${main.dir}">
-                <include name="**/${problem}/"/>
-                <exclude name="**/helper/*"/>
-            </fileset>
-            <fileset dir="${test.dir}">
-                <include name="**/${problem}/"/>
-                <exclude name="**/helper/*"/>
-            </fileset>
-        </delete>
-    </target>
-
-
-    <!-- ================================= private targets ================================== -->
-
-    <!-- @CONFIRMED compile and run ProblemBuilder main() method -->
-    <target name="generate"
-        depends="compile.src">
-        <echo>Run ProblemBuilder from main() method!</echo>
-        <java classname="${main.entry}">
-            <arg value="${tpl.dir}"/>
-            <arg value="${main.dir}"/>
-            <arg value="${test.dir}"/>
-            <arg value="${pck}"/>
-            <arg value="${problem}"/>
-            <arg value="${util}"/>
-            <classpath refid="classpath"/>
-        </java>
-    </target>
-    <!-- @CONFIRMED compile and run JUnit test -->
-    <target name="junit"
-        depends="compile.src,compile.junit">
+    <!-- @CONFIRMED -->
+    <target name="junit" depends="compile.src,compile.junit"
+        description="Compile and run helper JUnit test.">
         <echo>Running JUnit Test ... </echo>
         <java classname="${junit.entry}">
             <classpath refid="classpath"/>
         </java>
     </target>
-    <!-- @CONFIRMED test a specific generated problem -->
-    <target name="test.problem">
-        <echo>Test generated problem ${problem} ... </echo>
-        <java classname="${pck}.${problem}.TesterRunner">
+    <!-- @CONFIRMED -->
+    <target name="run" depends="compile.src"
+        description="Compile and run ProblemBuilder main() method">
+        <echo>Running ProblemBuilder from main() method!</echo>
+        <java classname="${main.entry}">
+            <arg value="${tpl.dir}"/>
+            <arg value="${main.dir}"/>
+            <arg value="${test.dir}"/>
+            <arg value="${pck}"/>
+            <arg value="${problem}"/>
+            <arg value="${util}"/>
             <classpath refid="classpath"/>
         </java>
     </target>
-    <!-- @CONFIRMED compile main source code -->
-    <target name="compile.src" description="Compile helper source codes.">
-        <echo>Compile .java source file under ${main.dir} ... </echo>
-        <mkdir dir="${bin.dir}"/>
-        <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
-            <include name="**/helper/*.java"/>
-            <classpath refid="classpath"/>
-        </javac>
-    </target>
-    <!-- @CONFIRMED compile junit tests -->
-    <target name="compile.junit" description="Compile junit test source codes.">
-        <echo>Compile .java source file under ${test.dir} ... </echo>
-        <mkdir dir="${bin.dir}"/>
-        <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
-            <include name="**/helper/*.java"/>
-            <classpath refid="classpath"/>
-        </javac>
-    </target>
-    <!-- @CONFIRMED compile main source code -->
-    <target name="compile.problem" description="Compile a specific problem source codes.">
-        <echo>Compile .java for problem ${problem} ... </echo>
-        <mkdir dir="${bin.dir}"/>
-        <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
-            <include name="**/${problem}/*.java"/>
-            <classpath refid="classpath"/>
-        </javac>
-        <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
-            <include name="**/${problem}/*.java"/>
-            <classpath refid="classpath"/>
-        </javac>
-    </target>
-    <!-- @CONFIRMED remove main classes, remove generated .java skeleton -->
-    <target name="clean" description="Clean output directories.">
+    <!-- @CONFIRMED -->
+    <target name="clean" description="Clean all generated files of helper project.">
         <input message="Delete all generated files (y/n)?"
                validargs="y,n"
                addproperty="do.delete"/>
@@ -163,15 +82,116 @@
         <delete includeemptydirs="true">
             <fileset dir="${bin.dir}"/>
             <fileset dir="${main.dir}">
-                <exclude name="**/helper/*"/>
+                <exclude name="**/helper/*.java"/>
             </fileset>
             <fileset dir="${test.dir}">
-                <exclude name="**/helper/*"/>
+                <exclude name="**/helper/*.java"/>
             </fileset>
         </delete>
     </target>
-    <!-- @CONFIRMED remove a specific problem -->
-    <target name="clean.problem" description="Clean output directories.">
+
+
+    <!-- ================================= targets to deploy helper ================================== -->
+
+    <!-- deploy properties -->
+    <property name="leetcode" value="../java"/>
+    <property name="leetcode.bin" value="${leetcode}/bin"/>
+    <property name="leetcode.lib" value="${leetcode}/lib"/>
+    <property name="leetcode.tpl" value="${leetcode}/src/main/resources"/>
+    <!-- @CONFIRMED -->
+    <target name="clean.deploy" description="Clean last deployment.">
+        <echo>Uninstalling helper from leetcode java root ... </echo>
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${leetcode}">
+                <include name="build.properties"/>
+                <include name="build.xml"/>
+            </fileset>
+            <fileset dir="${leetcode.bin}">
+                <include name="**/helper"/>
+            </fileset>
+            <fileset dir="${leetcode.lib}">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${leetcode.tpl}">
+                <include name="*.vm"/>
+            </fileset>
+        </delete>
+    </target>
+    <!-- @CONFIRMED -->
+    <target name="deploy" depends="clean.deploy, clean, compile.src"
+        description="Deploy helper generator to leetcode java repository.">
+        <echo>Installing helper to leetcode java root.</echo>
+        <mkdir dir="${leetcode}"/>
+        <copy todir="${leetcode}">
+            <fileset dir=".">
+                <include name="build-release.properties"/>
+                <include name="build-release.xml"/>
+            </fileset>
+            <globmapper from="build-release.*" to="build.*"/>
+        </copy>
+        <mkdir dir="${leetcode.bin}"/>
+        <copy todir="${leetcode.bin}">
+            <fileset dir="${bin.dir}">
+                <include name="**/helper/*.class"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${leetcode.lib}"/>
+        <copy todir="${leetcode.lib}">
+            <fileset dir="${lib.dir}">
+                <include name="*.jar"/>
+                <exclude name="gson-*.jar"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${leetcode.tpl}"/>
+        <copy todir="${leetcode.tpl}">
+            <fileset dir="${tpl.dir}">
+                <include name="*.vm"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <!-- ================================= release version ================================== -->
+
+    <!--    @CONFIRMED
+            @RELEASE -->
+    <target name="generate.problem" description="Generate project skeleton for a problem.">
+        <java classname="${main.entry}">
+            <arg value="${tpl.dir}"/>
+            <arg value="${main.dir}"/>
+            <arg value="${test.dir}"/>
+            <arg value="${pck}"/>
+            <arg value="${problem}"/>
+            <arg value="${util}"/>
+            <classpath refid="classpath"/>
+        </java>
+        <echo>Problem ${problem} generated! </echo>
+    </target>
+    <!--    @CONFIRMED
+            @RELEASE-->
+    <target name="compile.problem" description="Compile the generated problem.">
+        <echo>Compile source code for problem ${problem} ... </echo>
+        <mkdir dir="${bin.dir}"/>
+        <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
+            <include name="**/${problem}/*.java"/>
+            <classpath refid="classpath"/>
+        </javac>
+        <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
+            <include name="**/${problem}/*.java"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+    <!--    @CONFIRMED
+            @RELEASE -->
+    <target name="test.problem" description="Test a specific generated problem.">
+        <echo>Test generated problem ${problem} ... </echo>
+        <java classname="${pck}.${problem}.TesterRunner">
+            <classpath refid="classpath"/>
+        </java>
+    </target>
+    <!--    @CONFIRMED
+            @RELEASE -->
+    <target name="clean.problem" description="Clean everything about a specific problem.">
         <input message="Delete all source code of problem ${problem} (y/n)?"
                validargs="y,n"
                addproperty="do.delete"/>
@@ -182,15 +202,12 @@
         <delete includeemptydirs="true">
             <fileset dir="${bin.dir}">
                 <include name="**/${problem}"/>
-                <exclude name="**/helper/*"/>
             </fileset>
             <fileset dir="${main.dir}">
                 <include name="**/${problem}/"/>
-                <exclude name="**/helper/*"/>
             </fileset>
             <fileset dir="${test.dir}">
                 <include name="**/${problem}/"/>
-                <exclude name="**/helper/*"/>
             </fileset>
         </delete>
     </target>

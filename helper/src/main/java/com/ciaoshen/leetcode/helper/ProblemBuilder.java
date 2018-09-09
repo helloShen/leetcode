@@ -14,6 +14,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+// java.nio (to creat recursive directory)
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 // velocity
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.Template;
@@ -75,7 +79,6 @@ public class ProblemBuilder {
     public void writeTemplates() {
         File[] templates = new File(templateDir).listFiles();
         for (File t : templates) {
-            System.out.println(t.getName());
             writeTemplate(t);
         }
     }
@@ -112,6 +115,7 @@ public class ProblemBuilder {
      * @param dst absolute path where store the generated .java source file
      */
     void writeTemplate(File tplFile) {
+        System.out.println("Writing " + tplFile.getName() + " ... ");
         Template t = ve.getTemplate(tplFile.getName());
         VelocityContext context = new VelocityContext();
         // assign variables
@@ -138,16 +142,27 @@ public class ProblemBuilder {
     Writer getFileWriter(String path) {
         try {
             String directoryPath = path.substring(0, path.lastIndexOf("/"));
-            System.out.println("Directory Path = " + directoryPath);
-            File directory = new File(directoryPath);
-            if (!directory.exists()) {
-                directory.mkdir();
-            }
+            confirmDir(directoryPath);
             return new BufferedWriter(new FileWriter(new File(path)));
         } catch (FileNotFoundException fnfe) { // new File()
             throw new RuntimeException("ProblemBuilder#getFileWriter(): File not found: <" + path + ">.");
         } catch (IOException ioe) { // new FileWriter()
             throw new RuntimeException("ProblemBuilder#getFileWriter(): IOException occurred when creating the new FileWriter.");
+        }
+    }
+    /**
+     * Use NIO to recursively create a deep path
+     * @param dir any path such as: "src/test/java/com/ciaoshen/leetcode"
+     */
+    void confirmDir(String dir) {
+        Path path = Paths.get(dir);
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                //fail to create directory
+                e.printStackTrace();
+            }
         }
     }
 
