@@ -20,6 +20,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+/** java.nio.file */
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ProblemBuilderTest {
 
@@ -51,16 +55,32 @@ public class ProblemBuilderTest {
         assertEquals("/", answer.substring(0, answer.indexOf("*")));
         System.out.println("ProblemBuilder#writeTemplates() method pass JUnit test!");
     }
-    @Test
+    @Test(expected = Test.None.class) /* no exception expected */
     public void testGetFileWriter() {
         Writer fw = builder.getFileWriter(W_TEST);
         assertNotNull(fw);
-        System.out.println("ProblemBuilder#getWriter() method pass JUnit test!");
+        String input = "Junit test of getFileWriter() method.";
         try {
+            fw.write(input, 0, input.length());
+            fw.flush();
+            String content = builder.readFile(W_TEST);
+            assertEquals(input, content);
             fw.close();
+            deleteRecursiveDirectory(new File(W_TEST_DIR));
         } catch (IOException ioe) {
-            throw new RuntimeException("ProblemBuilderTest#testGetWriter() can not close the FileWriter!");
+            ioe.printStackTrace();
         }
+        System.out.println("ProblemBuilder#getWriter() method pass JUnit test!");
+    }
+    /** recursively delete a directory and all its sub directories */
+    private void deleteRecursiveDirectory(File file) {
+        File[] subs = file.listFiles();
+        if (subs != null) {
+            for (File sub : subs) {
+                deleteRecursiveDirectory(sub);
+            }
+        }
+        file.delete();
     }
     @Test
     public void testReadFile() {
@@ -83,7 +103,8 @@ public class ProblemBuilderTest {
     /** 测试FileReader的文本文件 */
     private final String RES_DIR = "src/test/resources";
     private final String R_TEST = RES_DIR + "/reader_test.txt";
-    private final String W_TEST = RES_DIR + "/writer_test.txt";
+    private final String W_TEST = RES_DIR + "/a/b/c/d/e/writer_test.txt";
+    private final String W_TEST_DIR = RES_DIR + "/a";
     /** 内置ProlbemBuilder */
     private ProblemBuilder builder;
 }

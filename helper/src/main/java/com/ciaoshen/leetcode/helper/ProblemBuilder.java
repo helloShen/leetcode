@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.Charset;
 // velocity
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.Template;
@@ -127,44 +128,33 @@ public class ProblemBuilder {
         Writer fw = getFileWriter(buildSourcePath(tplFile));
         try {
             fw.write(sw.toString());
+            fw.flush();
             fw.close();
             sw.close();
         } catch (IOException ioe) {
-            throw new RuntimeException("ProblemBuilder#writeTemplate() can not close the Writer!");
+            ioe.printStackTrace();
         }
     }
 
     /**
-     * Get a FileWriter decorated by BufferedWriter
+     * Get a FileWriter decorated by BufferedWriter (using java.nio)
      * @param  path absolute path of that file
      * @return      A FileWriter decorated by BufferedWriter
      */
     Writer getFileWriter(String path) {
+        Path directory = Paths.get(path.substring(0, path.lastIndexOf("/"))); // eliminate filename
         try {
-            String directoryPath = path.substring(0, path.lastIndexOf("/"));
-            confirmDir(directoryPath);
-            return new BufferedWriter(new FileWriter(new File(path)));
-        } catch (FileNotFoundException fnfe) { // new File()
-            throw new RuntimeException("ProblemBuilder#getFileWriter(): File not found: <" + path + ">.");
-        } catch (IOException ioe) { // new FileWriter()
-            throw new RuntimeException("ProblemBuilder#getFileWriter(): IOException occurred when creating the new FileWriter.");
-        }
-    }
-    /**
-     * Use NIO to recursively create a deep path
-     * @param dir any path such as: "src/test/java/com/ciaoshen/leetcode"
-     */
-    void confirmDir(String dir) {
-        Path path = Paths.get(dir);
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                //fail to create directory
-                e.printStackTrace();
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
             }
+            return Files.newBufferedWriter(Paths.get(path));
+        } catch (IOException ioe) { // createDirectories() && newBufferedWriter()
+            ioe.printStackTrace();
+            return null;
         }
     }
+
+
 
     /**
      * Read the content of a file

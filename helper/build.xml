@@ -26,13 +26,12 @@
     </path>
 
 
-
     <!-- ================================= targets to test helper ================================== -->
 
     <!-- @CONFIRMED -->
     <target name="compile.src" description="Compile helper source codes.">
         <echo>Compiling .java source file under ${main.dir} ... </echo>
-        <mkdir dir="${bin.dir}"/>
+        <mkdir dir="${bin.dir}"/> <!-- ant will not re-create an existing dir -->
         <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
             <include name="**/helper/*.java"/>
             <classpath refid="classpath"/>
@@ -122,7 +121,7 @@
         description="Deploy helper generator to leetcode java repository.">
         <echo>Installing helper to leetcode java root.</echo>
         <mkdir dir="${leetcode}"/>
-        <copy todir="${leetcode}">
+        <copy todir="${leetcode}"> <!-- ant will overwrite the existing file -->
             <fileset dir=".">
                 <include name="build-release.properties"/>
                 <include name="build-release.xml"/>
