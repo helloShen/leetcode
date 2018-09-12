@@ -5,7 +5,7 @@ package com.ciaoshen.leetcode.most_common_word;
 
 /** basic util */
 import java.util.*;
-import com.ciaoshen.leetcode.myUtils.*;
+import com.ciaoshen.leetcode.util.*;
 /** JUnit */
 import static org.junit.Assert.*;
 import org.junit.Before;

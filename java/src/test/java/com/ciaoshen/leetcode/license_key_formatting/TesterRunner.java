@@ -1,7 +1,7 @@
 /**
- * Leetcode - most_common_word
+ * Leetcode - license_key_formatting
  */
-package com.ciaoshen.leetcode.most_common_word;
+package com.ciaoshen.leetcode.license_key_formatting;
 
 /** basic util */
 import java.util.*;

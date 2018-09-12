@@ -1,7 +1,7 @@
 /**
- * Leetcode - most_common_word
+ * Leetcode - remove_comments
  */
-package com.ciaoshen.leetcode.most_common_word;
+package com.ciaoshen.leetcode.remove_comments;
 
 /** basic util */
 import java.util.*;

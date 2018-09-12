@@ -3,7 +3,7 @@
  */
 package com.ciaoshen.leetcode.most_common_word;
 import java.util.*;
-import com.ciaoshen.leetcode.myUtils.*;
+import com.ciaoshen.leetcode.util.*;
 
 /**
  * 利用Trie来记录单词树

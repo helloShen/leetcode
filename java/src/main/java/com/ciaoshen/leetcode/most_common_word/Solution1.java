@@ -3,7 +3,7 @@
  */
 package com.ciaoshen.leetcode.most_common_word;
 import java.util.*;
-import com.ciaoshen.leetcode.myUtils.*;
+import com.ciaoshen.leetcode.util.*;
 
 /**
  * 用HashMap记录单词
