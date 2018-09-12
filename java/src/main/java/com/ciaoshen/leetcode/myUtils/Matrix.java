@@ -1,4 +1,9 @@
 /**
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * Toolkits for Matrix
  */
 package com.ciaoshen.leetcode.myUtils;

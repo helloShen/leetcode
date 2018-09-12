@@ -1,11 +1,16 @@
-/**
+/*
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * NestedInteger for Leetcode problem: Flatten Nested List Iterator
  */
 package com.ciaoshen.leetcode.myUtils;
 import java.util.*;
 
 public class NestedInteger {
-    
+
     /** 构造函数 */
     public NestedInteger() {
         nums = new ArrayList<NestedInteger>();
@@ -69,18 +74,18 @@ public class NestedInteger {
      * 反序列化。要求输入格式如下：
      * 1. 输入String不能为空
      * 2. 不能有空格
-     * 3. 只能包含以下字符： 
-     *      '0~9' 
+     * 3. 只能包含以下字符：
+     *      '0~9'
      *      ','
      *      '-'
      *      '['
-     *      ']' 
-     * 
+     *      ']'
+     *
      * 下面几个例子是合法的：
      *      "[123,[456,[789]]]"
      *      "123"
      *      "[-123,[],[[]]]"
-     *  
+     *
      *  !注：单个"-"表示0
      */
     private static NestedInteger deserialize(String s) {

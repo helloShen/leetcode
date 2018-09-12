@@ -1,4 +1,9 @@
 /**
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * Structure Interval: period of time, start at "start", end at "end"
  */
 package com.ciaoshen.leetcode.myUtils;

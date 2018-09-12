@@ -1,4 +1,9 @@
 /**
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * Leetcode - Basic Data Structure - Undirected Graph Node
  */
 package com.ciaoshen.leetcode.myUtils;

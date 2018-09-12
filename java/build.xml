@@ -7,21 +7,16 @@
 
     <!-- entry points -->
     <property name="builder.pck" value="com.ciaoshen.leetcode.helper"/>
-    <property name="junit.entry" value="${builder.pck}.TestRunner"/>
     <property name="main.entry" value="${builder.pck}.ProblemBuilder"/>
 
 
     <!-- ================================= classpath ================================== -->
 
     <!-- build classpath collection with a path-like structure -->
-    <path id="classpath">
+    <path id="single.jar">
         <pathelement path="${bin.dir}"/>
         <fileset dir="${lib.dir}">
-            <include name="velocity-engine-core-2.0.jar"/>
-            <include name="junit-4.10.jar"/>
-            <include name="slf4j-api-1.7.25.jar"/>
-            <include name="slf4j-simple-1.7.25.jar"/>
-            <include name="commons-lang3-3.8.jar"/>
+            <include name="leetcode-helper.jar"/>
         </fileset>
     </path>
 
@@ -36,7 +31,7 @@
             <arg value="${pck}"/>
             <arg value="${problem}"/>
             <arg value="${util}"/>
-            <classpath refid="classpath"/>
+            <classpath refid="single.jar"/>
         </java>
         <echo>Problem ${problem} generated! </echo>
     </target>
@@ -47,11 +42,11 @@
         <mkdir dir="${bin.dir}"/>
         <javac destdir="${bin.dir}" srcdir="${main.dir}" debug="on" includeantruntime="false">
             <include name="**/${problem}/*.java"/>
-            <classpath refid="classpath"/>
+            <classpath refid="single.jar"/>
         </javac>
         <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on" includeantruntime="false">
             <include name="**/${problem}/*.java"/>
-            <classpath refid="classpath"/>
+            <classpath refid="single.jar"/>
         </javac>
     </target>
     <!--    @CONFIRMED
@@ -59,7 +54,7 @@
     <target name="test" description="Test a specific generated problem.">
         <echo>Test generated problem ${problem} ... </echo>
         <java classname="${pck}.${problem}.TesterRunner">
-            <classpath refid="classpath"/>
+            <classpath refid="single.jar"/>
         </java>
     </target>
     <!--    @CONFIRMED

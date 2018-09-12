@@ -1,4 +1,9 @@
 /**
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * 线段树
  * 用于Range Sum Query - Mutable这道题
  * 线段树专门用来计算区域内的累计值

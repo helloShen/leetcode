@@ -1,4 +1,9 @@
 /**
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * Leetcode - Basic Data Stucture - Random List Node
  *
  * A linked list is given such that each node contains

@@ -1,4 +1,9 @@
-/**
+/** 
+ * ##########################################################
+ * Deprecated
+ * please use new util package: com.ciaoshen.leetcode.util
+ * ##########################################################
+ *
  * Problem Interface
  */
 package com.ciaoshen.leetcode.myUtils;
