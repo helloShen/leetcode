@@ -36,7 +36,8 @@ public class Tester {
         /* uncomment to switch solutions */
         // stack = new Solution1();
         // stack = new Solution2();
-        stack = new Solution3();
+        // stack = new Solution3();
+        stack = new Solution4();
     }
 
     /** Execute once after all of the test methods are executed in this class. */
@@ -48,8 +49,9 @@ public class Tester {
     public static Collection<Object[]> testcases() {
         return Arrays.asList(new Object[][]{
             {new int[]{5, 1, 5}, new String[]{"push", "push", "push", "top", "popMax", "top", "peekMax", "pop", "top"},
-             new ArrayList<Integer>(Arrays.asList(new Integer[]{5, 5, 1, 5, 1, 5}))}
-            // {},     // test case 2 (init parameters below: {para1, para2, expected})
+             new ArrayList<Integer>(Arrays.asList(new Integer[]{5, 5, 1, 5, 1, 5}))},
+            {new int[]{74, 89, 67, 61, -77, 81, -71, 32}, new String[]{"push","popMax","push","push","popMax","pop","push","push","peekMax","popMax","push","pop","push","push"},
+             new ArrayList<Integer>(Arrays.asList(new Integer[]{74, 89, 67, 61, 61, 81}))},
             // {}      // test case 3 (init parameters below: {para1, para2, expected})
         });
     }
