@@ -16,10 +16,6 @@ class Solution2 implements Solution {
             this.dest = dest;
             this.cost = cost;
         }
-        public boolean equals(Object o) {
-            if (! (o instanceof Flight)) return false;
-            return (((Flight)o).dest == this.dest);
-        }
     }
     public int networkDelayTime(int[][] times, int N, int K) {
         int[][] flightTable = new int[N + 1][N + 1];
@@ -28,38 +24,29 @@ class Solution2 implements Solution {
         for (int[] time : times) flightTable[time[0]][time[1]] = time[2];
         PriorityQueue<Flight> heap = new PriorityQueue<>((Flight a, Flight b) -> (a.cost - b.cost));
         heap.add(new Flight(K, flightTable[K][K]));
-        int[] costs = new int[N + 1];
-        Arrays.fill(costs, -1);
+        boolean[] visited = new boolean[N + 1];
+        int[] minCosts = new int[N + 1];
+        Arrays.fill(minCosts, Integer.MAX_VALUE);
+        int remain = N;
+        int maxPrice = 0;
         while (!heap.isEmpty()) {
             Flight cheapest = heap.poll();
             int from = cheapest.dest;
-            costs[from] = cheapest.cost;
+            if (visited[from]) continue;
+            visited[from] = true;
+            maxPrice = Math.max(maxPrice, cheapest.cost);
+            remain--;
             for (int to = 1; to <= N; to++) {
-                if (costs[to] >= 0) continue;
-                if (flightTable[from][to] >= 0) {
-                    int newCost = cheapest.cost + flightTable[from][to];
-                    boolean update = true;
-                    Iterator<Flight> ite = heap.iterator();
-                    while (ite.hasNext()) {
-                        Flight line = ite.next();
-                        if (line.dest == to) {
-                            if (line.cost > newCost) {
-                                ite.remove();
-                            } else {
-                                update = false;
-                            }
-                            break;
-                        }
+                if (!visited[to] && flightTable[from][to] >= 0) {
+                    int newPrice = cheapest.cost + flightTable[from][to];
+                    if (newPrice < minCosts[to]) {
+                        minCosts[to] = newPrice;
+                        heap.add(new Flight(to, newPrice));
                     }
-                    if (update) heap.add(new Flight(to, newCost));
                 }
             }
         }
-        int maxPrice = 0;
-        for (int i = 1; i <= N; i++) {
-            if (costs[i] == -1) return -1;
-            maxPrice = Math.max(maxPrice, costs[i]);
-        }
-        return maxPrice;
+        return (remain == 0)? maxPrice : -1;
     }
+    
 }
