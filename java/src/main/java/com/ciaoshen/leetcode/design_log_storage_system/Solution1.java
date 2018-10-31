@@ -16,7 +16,6 @@ import com.ciaoshen.leetcode.util.*;
  */
 class Solution1 implements Solution {
 
-
     private final String SEP = ":";
     private class Time {
         private int[] t;
