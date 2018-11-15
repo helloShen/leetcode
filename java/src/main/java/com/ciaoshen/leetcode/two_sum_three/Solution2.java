@@ -28,9 +28,9 @@ class Solution2 implements Solution {
     }
 
     public void add(int number) {
-        nums.add(number);
         min = Math.min(min, number);
         max = Math.max(max, number);
+        nums.add(number);
         Integer prevTimes = table.get(number);
         table.put(number, (prevTimes == null)? 1 : prevTimes + 1);
     }
