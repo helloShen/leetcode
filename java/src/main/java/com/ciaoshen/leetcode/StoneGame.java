@@ -61,9 +61,20 @@ class StoneGame implements Problem {
 
     private class Solution3 extends Solution {
         { super.id = 3; }
-        // implement your solution's method HERE...
+
+        /** 自底向上的动态规划 */
         public boolean stoneGame(int[] piles) {
-            return false;
+            int len = piles.length;
+            int[][] dp = new int[len][len];
+            for (int i = 0; i < len; i++) dp[i][i] = -piles[i];
+            for (int offset = 1, isAlex = 1; offset < len; offset++) {
+                for (int start = 0, end = start + offset; start < len - offset; start++) {
+                    int takeHead = piles[start] * isAlex + dp[start + 1][end];
+                    int takeTail = piles[end] * isAlex + dp[start][end - 1];
+                    dp[start][end] = Math.max(takeHead, takeTail);
+                }
+            }
+            return dp[0][len - 1] > 0;
         }
     }
     // you can expand more solutions HERE if you want...
