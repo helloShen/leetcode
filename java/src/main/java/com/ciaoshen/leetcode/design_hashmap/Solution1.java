@@ -20,12 +20,12 @@ class Solution1 implements Solution {
     private List[] table;
 
     public void init() {
-         table = (ArrayList<int[]>[]) new ArrayList[SIZE];
+         table = (LinkedList<int[]>[]) new LinkedList[SIZE];
     }
 
     public void put(int key, int value) {
         int hash = hash(key);
-        if (table[hash] == null) table[hash] = new ArrayList<int[]>();
+        if (table[hash] == null) table[hash] = new LinkedList<int[]>();
         List list = table[hash];
         for (Object o : list) {
             int[] entry = (int[]) o;
