@@ -26,7 +26,7 @@ class Solution1 implements Solution {
     private void backtracking(int moves) {
         maxMoves = Math.max(moves, maxMoves);
         if (log.isDebugEnabled()) {
-            log.debug("current moves = {}", moves);
+            log.debug("current move = {}", moves);
         }
         for (int i = 0; i < list.size(); i++) {
             int[] stone = list.get(i);
