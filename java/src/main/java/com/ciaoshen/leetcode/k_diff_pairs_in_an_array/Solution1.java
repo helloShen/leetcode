@@ -24,7 +24,7 @@ class Solution1 implements Solution {
         Set<Integer> asSmaller = new HashSet<>();
         Set<Integer> asGreater = new HashSet<>();
         int count = 0;
-        for (int n : nums) {
+        for (int n : numSet) {
             if (!asSmaller.contains(n) && numSet.contains(n + k)) {
                 count++;
                 asSmaller.add(n);
