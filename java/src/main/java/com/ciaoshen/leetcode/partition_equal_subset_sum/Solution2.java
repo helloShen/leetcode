@@ -26,6 +26,7 @@ class Solution2 implements Solution {
         for (int num : nums) {
             for (int i = sum; i > 0; i--) {
                 if (i >= num) dp[i] = dp[i] || dp[i - num];
+                if (dp[target]) return true;
             }
         }
         return dp[target];
