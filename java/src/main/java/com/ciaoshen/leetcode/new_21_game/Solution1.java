@@ -29,12 +29,9 @@ class Solution1 implements Solution {
         if (log.isDebugEnabled()) {
             log.debug("count = {}", Arrays.toString(count));
         }
-        double inRange = 0, outOfRange = 0;
-        for (int i = K; i <= N; i++) inRange += count[i];
-        for (int i = N + 1; i <= max; i++) outOfRange += count[i];
-        double sum = inRange + outOfRange;
-        if (sum == 0) return 0;
-        return (double) inRange / sum;
+        double sumProb = 0.0;
+        for (int i = K; i <= N; i++) sumProb += count[i];
+        return sumProb;
     }
 
     private int n;
